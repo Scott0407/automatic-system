@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Solver & Grade Converter</title>
+    <style>
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <!-- Quadratic Solver -->
+    <div class="quadratic">
+        <h2>Quadratic Equation Solver</h2>
+        <form id="quadraticForm">
+            <label>a: <input type="number" id="a" required></label>
+            <label>b: <input type="number" id="b" required></label>
+            <label>c: <input type="number" id="c" required></label>
+            <button type="submit">Compute</button>
+            <button type="reset">Reset</button>
+        </form>
+        <div id="quadraticResult"></div>
+    </div>
+
+    <!-- Grade Converter -->
+    <div class="grader">
+        <h2>Grade Converter</h2>
+        <form id="gradeForm">
+            <label>Score: <input type="number" id="score" min="0" max="100" required></label>
+            <button type="submit">Compute</button>
+            <button type="reset">Reset</button>
+        </form>
+        <div id="gradeResult"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Quadratic Solver Logic
+        document.getElementById("quadraticForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const a = parseFloat(document.getElementById("a").value);
+            const b = parseFloat(document.getElementById("b").value);
+            const c = parseFloat(document.getElementById("c").value);
+
+            if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) {
+                document.getElementById("quadraticResult").innerHTML =
+                    "<p class='error'>Please enter valid numbers, and ensure 'a' is not zero.</p>";
+                return;
+            }
+
+            const discriminant = b * b - 4 * a * c;
+            let result = `<p>Discriminant: ${discriminant.toFixed(2)}</p>`;
+
+            if (discriminant > 0) {
+                const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                result += `<p>Roots: ${root1.toFixed(2)}, ${root2.toFixed(2)}</p>`;
+            } else if (discriminant === 0) {
+                const root = -b / (2 * a);
+                result += `<p>Root: ${root.toFixed(2)} (repeated)</p>`;
+            } else {
+                const realPart = (-b / (2 * a)).toFixed(2);
+                const imaginaryPart = (Math.sqrt(-discriminant) / (2 * a)).toFixed(2);
+                result += `<p>Roots: ${realPart} ± ${imaginaryPart}i</p>`;
+            }
+
+            document.getElementById("quadraticResult").innerHTML = result;
+        });
+
+        // Grade Converter Logic
+        document.getElementById("gradeForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const score = parseInt(document.getElementById("score").value);
+
+            if (isNaN(score) || score < 0 || score > 100) {
+                document.getElementById("gradeResult").innerHTML =
+                    "<p class='error'>Please enter a valid score (0-100).</p>";
+                return;
+            }
+
+            let grade;
+            if (score >= 85) grade = "A+";
+            else if (score >= 75) grade = "A";
+            else if (score >= 65) grade = "B+";
+            else if (score >= 60) grade = "B";
+            else if (score >= 55) grade = "C+";
+            else if (score >= 50) grade = "C";
+            else grade = "D";
+
+            document.getElementById("gradeResult").innerHTML =
+                `<p>Score ${score} → Grade ${grade}</p>`;
+        });
+    </script>
+</body>
+</html>
